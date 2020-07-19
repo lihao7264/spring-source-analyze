@@ -36,6 +36,7 @@ import org.springframework.web.servlet.LocaleResolver;
  * <p>Note: Does not support {@code setLocale}, since the accept header
  * can only be changed through changing the client's locale settings.
  *
+ * {@link LocaleResolver}实现，仅使用HTTP请求的"accept-language"请求头中指定的主要语言环境（即，客户端浏览器发送的语言环境，通常是客户端操作系统的语言环境）。
  * @author Juergen Hoeller
  * @author Rossen Stoyanchev
  * @since 27.02.2003

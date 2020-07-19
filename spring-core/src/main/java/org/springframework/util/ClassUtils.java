@@ -45,6 +45,8 @@ import org.springframework.lang.Nullable;
  * Miscellaneous {@code java.lang.Class} utility methods.
  * Mainly for internal use within the framework.
  *
+ * 其它{@code java.lang.Class}实用程序方法。 主要供框架内部使用。
+ * 参考学习地址：https://www.jianshu.com/p/83cbbd0b8b10
  * @author Juergen Hoeller
  * @author Keith Donald
  * @author Rob Harrop
@@ -175,6 +177,10 @@ public abstract class ClassUtils {
 	 * for example, for class path resource loading (but not necessarily for
 	 * {@code Class.forName}, which accepts a {@code null} ClassLoader
 	 * reference as well).
+	 *
+	 * 获取默认的类加载器
+	 * 按照获取当前线程上下文类加载器-->获取当前类类加载器-->获取系统启动类加载器的顺序来获取
+	 *
 	 * @return the default ClassLoader (only {@code null} if even the system
 	 * ClassLoader isn't accessible)
 	 * @see Thread#getContextClassLoader()
@@ -184,6 +190,7 @@ public abstract class ClassUtils {
 	public static ClassLoader getDefaultClassLoader() {
 		ClassLoader cl = null;
 		try {
+			//获取当前线程的context class loader
 			cl = Thread.currentThread().getContextClassLoader();
 		}
 		catch (Throwable ex) {
@@ -191,9 +198,11 @@ public abstract class ClassUtils {
 		}
 		if (cl == null) {
 			// No thread context class loader -> use class loader of this class.
+			// 如果没有context loader，使用当前类的类加载器。
 			cl = ClassUtils.class.getClassLoader();
 			if (cl == null) {
 				// getClassLoader() returning null indicates the bootstrap ClassLoader
+				// 如果当前类加载器无法获取，获得bootstrap ClassLoader
 				try {
 					cl = ClassLoader.getSystemClassLoader();
 				}
@@ -335,6 +344,8 @@ public abstract class ClassUtils {
 	 * Determine whether the {@link Class} identified by the supplied name is present
 	 * and can be loaded. Will return {@code false} if either the class or
 	 * one of its dependencies is not present or cannot be loaded.
+	 *
+	 * 判断当前classLoader中是否存在对应的类型了；
 	 * @param className the name of the class to check
 	 * @param classLoader the class loader to use
 	 * (may be {@code null} which indicates the default class loader)

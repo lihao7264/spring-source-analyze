@@ -33,6 +33,8 @@ import org.springframework.lang.Nullable;
  * {@link #addDefaultConverters(ConverterRegistry)} utility method for ad-hoc
  * use against any {@code ConverterRegistry} instance.
  *
+ * 在 SpringWebMvc 中做参数类型转换
+ *
  * @author Chris Beams
  * @author Juergen Hoeller
  * @author Stephane Nicoll
@@ -80,6 +82,7 @@ public class DefaultConversionService extends GenericConversionService {
 
 	/**
 	 * Add converters appropriate for most environments.
+	 * 添加适用于大多数环境的转换器。
 	 * @param converterRegistry the registry of converters to add to
 	 * (must also be castable to ConversionService, e.g. being a {@link ConfigurableConversionService})
 	 * @throws ClassCastException if the given ConverterRegistry could not be cast to a ConversionService
@@ -101,6 +104,7 @@ public class DefaultConversionService extends GenericConversionService {
 
 	/**
 	 * Add common collection converters.
+	 * 添加常见的集合转换器。
 	 * @param converterRegistry the registry of converters to add to
 	 * (must also be castable to ConversionService, e.g. being a {@link ConfigurableConversionService})
 	 * @throws ClassCastException if the given ConverterRegistry could not be cast to a ConversionService
@@ -131,6 +135,7 @@ public class DefaultConversionService extends GenericConversionService {
 		converterRegistry.addConverter(new StreamConverter(conversionService));
 	}
 
+	// 添加标量转换器
 	private static void addScalarConverters(ConverterRegistry converterRegistry) {
 		converterRegistry.addConverterFactory(new NumberToNumberConverterFactory());
 

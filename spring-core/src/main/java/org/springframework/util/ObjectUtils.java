@@ -601,6 +601,7 @@ public abstract class ObjectUtils {
 
 	/**
 	 * Return a String representation of an object's overall identity.
+	 * 返回对象整体身份的String表示形式。
 	 * @param obj the object (may be {@code null})
 	 * @return the object's identity as String representation,
 	 * or an empty String if the object was {@code null}
@@ -609,13 +610,15 @@ public abstract class ObjectUtils {
 		if (obj == null) {
 			return EMPTY_STRING;
 		}
+		// 类名+@+十六进制的身份标识码
 		return obj.getClass().getName() + "@" + getIdentityHexString(obj);
 	}
 
 	/**
 	 * Return a hex String form of an object's identity hash code.
+	 * 返回对象身份哈希码的十六进制字符串形式。
 	 * @param obj the object
-	 * @return the object's identity code in hex notation
+	 * @return the object's identity code in hex notation  对象的标识码（十六进制）
 	 */
 	public static String getIdentityHexString(Object obj) {
 		return Integer.toHexString(System.identityHashCode(obj));

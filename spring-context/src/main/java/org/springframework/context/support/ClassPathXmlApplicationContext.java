@@ -42,6 +42,8 @@ import org.springframework.util.Assert;
  * Consider using the {@link GenericApplicationContext} class in combination
  * with an {@link org.springframework.beans.factory.xml.XmlBeanDefinitionReader}
  * for more flexible context setup.</b>
+ * ClassPathXmlApplicationContext类是基于XML、可刷新的、可配置的
+ * 对应文档地址：https://docs.spring.io/spring/docs/5.1.10.RELEASE/spring-framework-reference/core.html#beans-basics
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

@@ -64,6 +64,11 @@ import java.util.Map;
  * org.springframework.context.support.PropertySourcesPlaceholderConfigurer property
  * placeholder configurers}.
  *
+ * 大多数（如果不是全部）Environment 类型的类都将实现的配置接口。
+ * 提供用于设置Profile和默认配置文件以及操纵基础属性源的工具。
+ * 允许客户端通过ConfigurablePropertyResolver 根接口设置和验证所需的属性、自定义转换服务以及其他功能。
+ *
+ * 总结：提供了编辑Profile以及默认配置文件等的方法
  * @author Chris Beams
  * @since 3.1
  * @see StandardEnvironment

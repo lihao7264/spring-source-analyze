@@ -95,6 +95,12 @@ import org.springframework.lang.Nullable;
  * <li>a custom destroy-method definition
  * </ol>
  *
+ * IOC容器最顶级的接口
+ * ApplicationContext 的功能更强大，所以选择用ApplicationContext，而不用BeanFactory
+ * 文档参考地址：https://docs.spring.io/spring/docs/5.1.10.RELEASE/spring-framework-reference/core.html#spring-core
+ * BeanFactory 接口提供了一种高级配置机制，能够管理任何类型的对象。
+ * ApplicationContext 是 BeanFactory 的子接口。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Chris Beams
@@ -351,15 +357,15 @@ public interface BeanFactory {
 	Class<?> getType(String name) throws NoSuchBeanDefinitionException;
 
 	/**
-	 * 获取指定的bean的别名
+	 * 获取指定的bean的别名列表
 	 * Return the aliases for the given bean name, if any.
 	 * All of those aliases point to the same bean when used in a {@link #getBean} call.
 	 * <p>If the given name is an alias, the corresponding original bean name
 	 * and other aliases (if any) will be returned, with the original bean name
 	 * being the first element in the array.
 	 * <p>Will ask the parent factory if the bean cannot be found in this factory instance.
-	 * @param name the bean name to check for aliases
-	 * @return the aliases, or an empty array if none
+	 * @param name the bean name to check for aliases  用来查找别名的bean名称
+	 * @return the aliases, or an empty array if none  别名，如果没有则为空数组
 	 * @see #getBean
 	 */
 	String[] getAliases(String name);

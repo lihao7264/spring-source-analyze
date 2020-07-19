@@ -28,6 +28,11 @@ import java.util.EventListener;
  * will be filtered accordingly, with the listener getting invoked for matching event
  * objects only.
  *
+ * 由应用程序事件监听器实现的接口。基于观察者模式的标准 java.util.EventListener 接口。
+ *
+ * 从Spring 3.0开始，ApplicationListener 可以一般性地声明监听的事件类型。
+ * 向IOC容器注册后，将相应地过滤事件，并且仅针对匹配事件对象调用监听器。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @param <E> the specific ApplicationEvent subclass to listen to
@@ -38,7 +43,8 @@ public interface ApplicationListener<E extends ApplicationEvent> extends EventLi
 
 	/**
 	 * Handle an application event.
-	 * @param event the event to respond to
+	 * 处理应用程序事件。
+	 * @param event the event to respond to  事件响应
 	 */
 	void onApplicationEvent(E event);
 

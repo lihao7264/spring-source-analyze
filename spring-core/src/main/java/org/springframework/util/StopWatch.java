@@ -35,6 +35,8 @@ import org.springframework.lang.Nullable;
  * <p>This class is normally used to verify performance during proof-of-concepts
  * and in development, rather than as part of production applications.
  *
+ * 常用于在概念验证和开发过程中验证性能，而不是作为生产应用程序的一部分。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Sam Brannen
@@ -120,7 +122,9 @@ public class StopWatch {
 	/**
 	 * Start a named task. The results are undefined if {@link #stop()}
 	 * or timing methods are called without invoking this method.
-	 * @param taskName the name of the task to start
+	 * 启动一个命名任务。
+	 * 如果在不调用此方法的情况下调用{@link #stop（）}或计时方法，则结果不确定。
+	 * @param taskName the name of the task to start  要开始的任务的名称
 	 * @see #stop()
 	 */
 	public void start(String taskName) throws IllegalStateException {
@@ -128,6 +132,7 @@ public class StopWatch {
 			throw new IllegalStateException("Can't start StopWatch: it's already running");
 		}
 		this.currentTaskName = taskName;
+		// 记录启动时的当前系统时间
 		this.startTimeMillis = System.currentTimeMillis();
 	}
 

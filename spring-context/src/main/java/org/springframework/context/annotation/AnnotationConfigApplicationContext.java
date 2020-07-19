@@ -42,6 +42,9 @@ import org.springframework.util.Assert;
  *
  * <p>See {@link Configuration @Configuration}'s javadoc for usage examples.
  *
+ * AnnotationConfigApplicationContext类是使用注解配置来加载初始化IOC容器的。
+ * 实现了 Annotation 相关的接口
+ * 相关文档地址：https://docs.spring.io/spring/docs/5.1.10.RELEASE/spring-framework-reference/core.html#beans-java
  * @author Juergen Hoeller
  * @author Chris Beams
  * @since 3.0

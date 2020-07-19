@@ -47,7 +47,25 @@ import org.springframework.util.CollectionUtils;
  * is to map within the current servlet mapping if applicable; see the
  * {@link #setAlwaysUseFullPath "alwaysUseFullPath"} property. For details on the
  * pattern options, see the {@link org.springframework.util.AntPathMatcher} javadoc.
-
+ * {@link org.springframework.web.servlet.HandlerMapping}接口的实现，用于从URL映射到请求处理程序bean。
+ * 支持映射到Bean实例和映射到Bean名称。 非单一处理程序则需要后者(使用映射到Bean名称)。
+ *
+ * "urlMap"属性适用于使用Bean引用（例如,通过XML bean定义中的map元素。
+ *
+ * 可以通过“mappings”属性以{@code java.util.Properties}类接受的形式设置对bean名称的映射，
+ *  如下所示：
+ *  {@code
+ *    /welcome.html=ticketController
+ *    /show.html=ticketController
+ *  }
+ *
+ * 语法为{@code PATH = HANDLER_BEAN_NAME}。
+ * 如果路径不是以斜杠开头，则在前面加上一个斜杠。
+ *
+ * 支持直接匹配(给定为"/test"--->已注册的"/test"）和"*"模式匹配（给定为"/test”--->已注册"/t*"）。
+ * 请注意，如果适用，默认值是在当前servlet映射内进行映射。
+ * 请参见{@link #setAlwaysUseFullPath "alwaysUseFullPath"}属性。
+ * 有关模式选项的详细信息，请参见{@link org.springframework.util.AntPathMatcher} Javadoc。
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see #setMappings
@@ -56,6 +74,8 @@ import org.springframework.util.CollectionUtils;
  */
 public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 
+	// url -----> bean名称
+	// 比如：/welcome.html=ticketController
 	private final Map<String, Object> urlMap = new LinkedHashMap<>();
 
 

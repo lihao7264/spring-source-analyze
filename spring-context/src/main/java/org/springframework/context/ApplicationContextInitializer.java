@@ -31,6 +31,16 @@ package org.springframework.context;
  * implemented or if the @{@link org.springframework.core.annotation.Order Order}
  * annotation is present and to sort instances accordingly if so prior to invocation.
  *
+ * 用于在刷新容器之前初始化Spring ConfigurableApplicationContext 的回调接口。
+ *
+ * 通常在需要对应用程序上下文进行某些编程初始化的Web应用程序中使用。
+ * 例如，根据上下文环境注册属性源或激活配置文件。
+ * 请参阅 ContextLoader 和FrameworkServlet 支持，分别声明 "contextInitializerClasses" 的 context-param 和 init-param。
+ *
+ * 鼓励ApplicationContextInitializer处理器检测是否已实现Spring的 Ordered 接口，
+ * 或者是否标注了 @Order 注解，并在调用之前相应地对实例进行排序。
+ *
+ * 在IOC容器之前的回调
  * @author Chris Beams
  * @since 3.1
  * @param <C> the application context type

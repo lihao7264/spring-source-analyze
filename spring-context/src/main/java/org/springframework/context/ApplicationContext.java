@@ -49,6 +49,9 @@ import org.springframework.lang.Nullable;
  * {@link ApplicationContextAware} beans as well as {@link ResourceLoaderAware},
  * {@link ApplicationEventPublisherAware} and {@link MessageSourceAware} beans.
  *
+ * 应用上下文接口，为应用程序提供配置。（非IOC容器最顶级的接口）
+ * 在应用程序运行时，它是只读的，但是如果实现支持，则可以重新加载。
+ * ApplicationContext 中全部都是get方法
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see ConfigurableApplicationContext

@@ -43,6 +43,20 @@ import org.springframework.core.io.ResourceLoader;
  * matching resources from the class path. Note that the resource location is
  * expected to be a path without placeholders in this case (e.g. "/beans.xml");
  * JAR files or classes directories can contain multiple files of the same name.
+ * 资源模式解析器
+ *
+ * 策略接口，用于将位置模式（例如：Ant样式的路径模式）解析为Resource对象。
+ *
+ * 这是 ResourceLoader 接口的扩展。
+ * 可以检查传入的 ResourceLoader（例如：在上下文中运行时通过 ResourceLoaderAware 传入的 ApplicationContext）是否也实现了此扩展接口。
+ *
+ * PathMatchingResourcePatternResolver 是一个独立的实现，可在 ApplicationContext 外部使用，
+ * ResourceArrayPropertyEditor也使用它来填充Resource数组Bean属性。
+ *
+ * 可以与任何类型的位置模式一起使用（例如 "/WEB-INF/*-context.xml"）：输入模式必须与策略实现相匹配。
+ * 该接口仅指定转换方法，而不是特定的模式格式。
+ * 此接口还为类路径中的所有匹配资源建议一个新的资源前缀 "classpath*:"。
+ * 请注意，在这种情况下，资源位置应该是没有占位符的路径（例如 "/beans.xml"）； jar包或类目录可以包含多个相同名称的文件。
  *
  * @author Juergen Hoeller
  * @since 1.0.2
@@ -58,6 +72,8 @@ public interface ResourcePatternResolver extends ResourceLoader {
 	 * This differs from ResourceLoader's classpath URL prefix in that it
 	 * retrieves all matching resources for a given name (e.g. "/beans.xml"),
 	 * for example in the root of all deployed JAR files.
+	 * 类路径中所有匹配资源的URL前缀："classpath*:"这与ResourceLoader的类路径URL前缀不同，
+	 * 在于它检索给定名称（例如"/beans.xml"）中的所有匹配资源，例如在所有已部署的JAR文件的根目录中。
 	 * @see org.springframework.core.io.ResourceLoader#CLASSPATH_URL_PREFIX
 	 */
 	String CLASSPATH_ALL_URL_PREFIX = "classpath*:";
@@ -67,9 +83,12 @@ public interface ResourcePatternResolver extends ResourceLoader {
 	 * <p>Overlapping resource entries that point to the same physical
 	 * resource should be avoided, as far as possible. The result should
 	 * have set semantics.
-	 * @param locationPattern the location pattern to resolve
-	 * @return the corresponding Resource objects
-	 * @throws IOException in case of I/O errors
+	 * 将给定的位置模式解析为Resource对象。
+	 * 应尽可能避免指向相同物理资源的资源条目重叠。
+	 * 结果应具有设定的语义。
+	 * @param locationPattern the location pattern to resolve  需要解析的位置模式
+	 * @return the corresponding Resource objects  相应的资源对象
+	 * @throws IOException in case of I/O errors   发生I/O错误时出现IOException
 	 */
 	Resource[] getResources(String locationPattern) throws IOException;
 

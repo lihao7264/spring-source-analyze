@@ -26,6 +26,11 @@ import org.springframework.lang.Nullable;
  * factories that allow setting the parent in a configurable
  * fashion can be found in the ConfigurableBeanFactory interface.
  *
+ * 实现多层嵌套容器的支撑(分层的)
+ *
+ * 由Bean工厂实现的子接口，可以是层次结构的一部分。
+ * 可以在 ConfigurableBeanFactory 接口中找到用于bean工厂的相应 setParentBeanFactory 方法，该方法允许以可配置的方式设置父对象。
+ * 注意：a、在原生的Web开发中，配置 SpringFramework 和 SpringMVC，是需要配置父子容器的。
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 07.07.2003

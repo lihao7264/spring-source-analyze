@@ -49,6 +49,19 @@ import org.springframework.lang.Nullable;
  * and {@code containsBeanDefinition}, the methods in this interface
  * are not designed for frequent invocation. Implementations may be slow.
  *
+ * 它可以提供Bean的迭代。
+ *
+ *    它是 BeanFactory 接口的扩展，它可以实现枚举其所有bean实例，而不是按客户的要求按名称一一尝试进行bean查找。
+ * 预加载其所有bean定义的 BeanFactory 实现（例如，基于XML的工厂）可以实现此接口。
+ *    如果实现类同时也实现了 HierarchicalBeanFactory，返回值也不会考虑任何 BeanFactory 层次结构，而仅与当前工厂中定义的bean有关。
+ *  但可以使用 BeanFactoryUtils 工具类来获取父工厂中的bean。
+ *    该接口中的方法将仅遵守该工厂的bean定义。
+ *  它们将忽略通过其它方式（例如 ConfigurableBeanFactory 的 registerSingleton 方法）注册的任何单例bean，
+ *  但 getBeanNamesOfType 和 getBeansOfType 除外，它们也将检查此类手动注册的单例。
+ *  当然，BeanFactory 的getBean 确实也允许透明访问此类特殊bean。
+ *  但是，在典型情况下，无论如何，所有bean都将由外部bean定义来定义，因此大多数应用程序不必担心这种区别。
+ *
+ * 总结：ListableBeanFactory它可以提供Bean的迭代。
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 16 April 2001
@@ -168,13 +181,17 @@ public interface ListableBeanFactory extends BeanFactory {
 	 * @param type the class or interface to match, or {@code null} for all bean names
 	 * @param includeNonSingletons whether to include prototype or scoped beans too
 	 * or just singletons (also applies to FactoryBeans)
+	 * 是否也包含原型或范围内的bean还是仅包含单例（也适用于FactoryBeans）
 	 * @param allowEagerInit whether to initialize <i>lazy-init singletons</i> and
 	 * <i>objects created by FactoryBeans</i> (or by factory methods with a
 	 * "factory-bean" reference) for the type check. Note that FactoryBeans need to be
 	 * eagerly initialized to determine their type: So be aware that passing in "true"
 	 * for this flag will initialize FactoryBeans and "factory-bean" references.
+	 * 是否初始化由工厂bean（或带有"factory-bean"引用的工厂方法）创建的lazy-init单例和对象，以进行类型检查。
+	 * 请注意:必须急切初始化FactoryBeans以确定它们的类型：因此请注意，为此标志传递"true"将初始化FactoryBeans和"factory-bean"引用。
 	 * @return the names of beans (or objects created by FactoryBeans) matching
 	 * the given object type (including subclasses), or an empty array if none
+	 * 匹配给定对象类型（包括子类）的bean（或由FactoryBeans创建的对象）的名称，如果没有，则返回一个空数组
 	 * @see FactoryBean#getObjectType
 	 * @see BeanFactoryUtils#beanNamesForTypeIncludingAncestors(ListableBeanFactory, Class, boolean, boolean)
 	 */

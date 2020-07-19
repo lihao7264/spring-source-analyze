@@ -26,7 +26,7 @@ package org.springframework.core.task;
  *
  * <p>The primary use case is to set some execution context around the task's
  * invocation, or to provide some monitoring/statistics for task execution.
- *
+ * 装饰器的回调接口，该接口将应用于将要执行的任何{@link Runnable}。
  * @author Juergen Hoeller
  * @since 4.3
  * @see TaskExecutor#execute(Runnable)
@@ -38,8 +38,9 @@ public interface TaskDecorator {
 	/**
 	 * Decorate the given {@code Runnable}, returning a potentially wrapped
 	 * {@code Runnable} for actual execution.
-	 * @param runnable the original {@code Runnable}
-	 * @return the decorated {@code Runnable}
+	 * 装饰给定的{@code Runnable}，返回可能包装的{@code Runnable}以便实际执行。
+	 * @param runnable the original {@code Runnable}  原始的{@code Runnable}
+	 * @return the decorated {@code Runnable}  被装饰的{@code Runnable}
 	 */
 	Runnable decorate(Runnable runnable);
 
