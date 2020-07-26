@@ -72,7 +72,9 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 
 
 	/**
+	 * AbstractXmlApplicationContext
 	 * Loads the bean definitions via an XmlBeanDefinitionReader.
+	 * 使用XmlBeanDefinitionReader做bean的装配（即解析xml）
 	 * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
 	 * @see #initBeanDefinitionReader
 	 * @see #loadBeanDefinitions
@@ -80,7 +82,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	@Override
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
 		// Create a new XmlBeanDefinitionReader for the given BeanFactory.
-		//给指定的beanFactory创建一个XmlBeanDefinitionReader读取器对象，用于读取解析xml对象
+		// 给指定的beanFactory创建一个XmlBeanDefinitionReader读取器对象，用于读取解析xml对象
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
 
 		// Configure the bean definition reader with this context's

@@ -24,6 +24,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
  * Delegate factory class used to just introduce an AOP framework dependency
  * when actually creating a scoped proxy.
  *
+ * 在实际创建作用域代理时，用于仅引入AOP框架依赖关系的委托工厂类。
+ *
  * @author Juergen Hoeller
  * @since 3.0
  * @see org.springframework.aop.scope.ScopedProxyUtils#createScopedProxy

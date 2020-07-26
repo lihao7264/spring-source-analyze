@@ -62,6 +62,9 @@ import org.springframework.lang.Nullable;
  * that users of this implementation to sanitize patterns in order to prefix
  * them with "/" as it makes sense in the context in which they're used.
  *
+ * SpringFramework 支持的是ant规则声明包
+ * AntPathMatcher是PathMatcher接口的唯一实现
+ *
  * @author Alef Arendsen
  * @author Juergen Hoeller
  * @author Rob Harrop
@@ -100,6 +103,9 @@ public class AntPathMatcher implements PathMatcher {
 
 	/**
 	 * Create a new instance with the {@link #DEFAULT_PATH_SEPARATOR}.
+	 * 使用{@link #DEFAULT_PATH_SEPARATOR}创建一个新实例。
+	 * 注意：a、PathMatcher 只有一个实现类： AntPathMatcher
+	 *
 	 */
 	public AntPathMatcher() {
 		this.pathSeparator = DEFAULT_PATH_SEPARATOR;

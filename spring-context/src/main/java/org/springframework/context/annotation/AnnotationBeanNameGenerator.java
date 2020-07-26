@@ -52,6 +52,8 @@ import org.springframework.util.StringUtils;
  *
  * <pre class="code">com.xyz.FooServiceImpl -&gt; fooServiceImpl</pre>
  *
+ * AnnotationBeanNameGenerator 的Bean名称生成规则
+ *
  * @author Juergen Hoeller
  * @author Mark Fisher
  * @since 2.5
@@ -68,7 +70,11 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 
 	@Override
 	public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
+		// bean定义是否为注解bean定义
 		if (definition instanceof AnnotatedBeanDefinition) {
+			// 看这些模式注解上是否有显式的声明 value 属性，
+			// 如果没有，则进入下面的 buildDefaultBeanName 方法，它会取类名的全称，
+			// 之后调 Introspector.decapitalize 方法将首字母转为小写。
 			String beanName = determineBeanNameFromAnnotation((AnnotatedBeanDefinition) definition);
 			if (StringUtils.hasText(beanName)) {
 				// Explicit bean name found.
@@ -76,13 +82,16 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 			}
 		}
 		// Fallback: generate a unique default bean name.
+		// 取类名的全称，之后调 Introspector.decapitalize 方法将首字母转为小写。
 		return buildDefaultBeanName(definition, registry);
 	}
 
 	/**
 	 * Derive a bean name from one of the annotations on the class.
-	 * @param annotatedDef the annotation-aware bean definition
-	 * @return the bean name, or {@code null} if none is found
+	 * 从类的注解之一中获取bean名称。
+	 * 看这些模式注解上是否有显式的声明 value 属性
+	 * @param annotatedDef the annotation-aware bean definition  注解感知的bean定义
+	 * @return the bean name, or {@code null} if none is found   Bean名称，如果找不到，则为{@code null}
 	 */
 	@Nullable
 	protected String determineBeanNameFromAnnotation(AnnotatedBeanDefinition annotatedDef) {
@@ -111,6 +120,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	/**
 	 * Check whether the given annotation is a stereotype that is allowed
 	 * to suggest a component name through its annotation {@code value()}.
+	 * 检查给定的注解是否是允许通过其注解{@code value（）}来建议组件名称的构造型。
 	 * @param annotationType the name of the annotation class to check
 	 * @param metaAnnotationTypes the names of meta-annotations on the given annotation
 	 * @param attributes the map of attributes for the given annotation
@@ -130,9 +140,11 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	/**
 	 * Derive a default bean name from the given bean definition.
 	 * <p>The default implementation delegates to {@link #buildDefaultBeanName(BeanDefinition)}.
-	 * @param definition the bean definition to build a bean name for
-	 * @param registry the registry that the given bean definition is being registered with
-	 * @return the default bean name (never {@code null})
+	 * 从给定的bean定义中派生默认的bean名称。
+	 * 默认实现委托给{@link #buildDefaultBeanName（BeanDefinition）}。
+	 * @param definition the bean definition to build a bean name for  Bean定义以为其建立Bean名称
+	 * @param registry the registry that the given bean definition is being registered with  正在注册给定bean定义的注册表
+	 * @return the default bean name (never {@code null})  缺省的bean名称（从不{@code null}）
 	 */
 	protected String buildDefaultBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
 		return buildDefaultBeanName(definition);
@@ -145,13 +157,22 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	 * <p>Note that inner classes will thus have names of the form
 	 * "outerClassName.InnerClassName", which because of the period in the
 	 * name may be an issue if you are autowiring by name.
-	 * @param definition the bean definition to build a bean name for
-	 * @return the default bean name (never {@code null})
+	 * 从给定的bean定义中派生默认的bean名称。
+	 * 默认实现只是构建简短的类名的大写形式：例如 “mypackage.MyJdbcDao”->“myJdbcDao”。
+	 * 请注意，内部类将因此具有“outerClassName.InnerClassName”形式的名称，
+	 * 如果按名称自动装配，则由于名称中的句点可能会出现问题。
+	 *
+	 * AccountService  --->  accountService
+	 * @param definition the bean definition to build a bean name for  Bean定义以为其建立Bean名称
+	 * @return the default bean name (never {@code null})   缺省的bean名称（从不{@code null}）
 	 */
 	protected String buildDefaultBeanName(BeanDefinition definition) {
+		// 获取全类名  com.atlihao.service.AccountService
 		String beanClassName = definition.getBeanClassName();
 		Assert.state(beanClassName != null, "No bean class name set");
+		// 获取类名   accountService
 		String shortClassName = ClassUtils.getShortName(beanClassName);
+		// 将首字母转为小写
 		return Introspector.decapitalize(shortClassName);
 	}
 

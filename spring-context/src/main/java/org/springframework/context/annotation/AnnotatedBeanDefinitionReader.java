@@ -39,6 +39,11 @@ import org.springframework.util.Assert;
  * <p>This is an alternative to {@link ClassPathBeanDefinitionScanner}, applying
  * the same resolution of annotations but for explicitly registered classes only.
  *
+ * 方便的适配器，用于以编程方式注册Bean类。
+ *
+ * 这是{@link ClassPathBeanDefinitionScanner}的替代方法，
+ * 它应用注解的相同分辨率，但仅适用于显式注册的类。
+ *
  * @author Juergen Hoeller
  * @author Chris Beams
  * @author Sam Brannen
@@ -52,6 +57,7 @@ public class AnnotatedBeanDefinitionReader {
 
 	private BeanNameGenerator beanNameGenerator = new AnnotationBeanNameGenerator();
 
+	// 注解scope 解析器（作用范围）
 	private ScopeMetadataResolver scopeMetadataResolver = new AnnotationScopeMetadataResolver();
 
 	private ConditionEvaluator conditionEvaluator;
@@ -128,8 +134,11 @@ public class AnnotatedBeanDefinitionReader {
 	 * Register one or more component classes to be processed.
 	 * <p>Calls to {@code register} are idempotent; adding the same
 	 * component class more than once has no additional effect.
-	 * @param componentClasses one or more component classes,
-	 * e.g. {@link Configuration @Configuration} classes
+	 * 注册一个或多个要处理的组件类。
+	 * 对{@code register}的调用是幂等的。
+	 * 多次添加同一组件类不会产生任何其他影响。
+	 * @param componentClasses one or more component classes,  一个或多个组件类
+	 * e.g. {@link Configuration @Configuration} classes  例如 {@link Configuration @Configuration}类
 	 */
 	public void register(Class<?>... componentClasses) {
 		for (Class<?> componentClass : componentClasses) {
@@ -140,6 +149,7 @@ public class AnnotatedBeanDefinitionReader {
 	/**
 	 * Register a bean from the given bean class, deriving its metadata from
 	 * class-declared annotations.
+	 * 从给定的bean类中注册一个bean，并从类声明的注解中派生其元数据。
 	 * @param beanClass the class of the bean
 	 */
 	public void registerBean(Class<?> beanClass) {
@@ -201,32 +211,45 @@ public class AnnotatedBeanDefinitionReader {
 	/**
 	 * Register a bean from the given bean class, deriving its metadata from
 	 * class-declared annotations.
-	 * @param beanClass the class of the bean
+	 * 从给定的bean类中注册一个bean，并从类声明的注解中派生其元数据。
+	 * @param beanClass the class of the bean  bean类
 	 * @param instanceSupplier a callback for creating an instance of the bean
-	 * (may be {@code null})
-	 * @param name an explicit name for the bean
+	 * (may be {@code null})   用于创建bean实例的回调（可以为{@code null}）
+	 * @param name an explicit name for the bean  Bean的显式名称
 	 * @param qualifiers specific qualifier annotations to consider, if any,
 	 * in addition to qualifiers at the bean class level
+	 * 除了bean类级别的限定符之外，还要考虑的特定限定符注释（如果有）
 	 * @param definitionCustomizers one or more callbacks for customizing the
 	 * factory's {@link BeanDefinition}, e.g. setting a lazy-init or primary flag
+	 * 一个或多个用于自定义工厂的{@link BeanDefinition}的回调，例如 设置惰性初始或主要标志
 	 * @since 5.0
 	 */
 	<T> void doRegisterBean(Class<T> beanClass, @Nullable Supplier<T> instanceSupplier, @Nullable String name,
 			@Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
 
+		// 包装为BeanDefinition
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(beanClass);
+		// 是否能通过条件，类上的@Condition，本质调用Condition的matches方法
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
 		}
 
 		abd.setInstanceSupplier(instanceSupplier);
+		// 解析Scope信息，决定作用域
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
+		// 设置作用域
 		abd.setScope(scopeMetadata.getScopeName());
+
+		// 生成Bean的名称
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
+		// 解析BeanDefinition的注解
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
+		// 别名不为空的话
 		if (qualifiers != null) {
+			// 循环别名
 			for (Class<? extends Annotation> qualifier : qualifiers) {
+				// 注解别名
 				if (Primary.class == qualifier) {
 					abd.setPrimary(true);
 				}
@@ -234,16 +257,19 @@ public class AnnotatedBeanDefinitionReader {
 					abd.setLazyInit(true);
 				}
 				else {
+					// 增加别名
 					abd.addQualifier(new AutowireCandidateQualifier(qualifier));
 				}
 			}
 		}
+		// 使用定制器修改这个BeanDefinition
 		for (BeanDefinitionCustomizer customizer : definitionCustomizers) {
 			customizer.customize(abd);
 		}
-
+		// 使用BeanDefinitionHolder，将BeanDefinition注册到IOC容器中
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+		// 注册bean
 		BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 	}
 

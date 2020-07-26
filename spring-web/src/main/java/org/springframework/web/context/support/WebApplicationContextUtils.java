@@ -168,6 +168,8 @@ public abstract class WebApplicationContextUtils {
 	/**
 	 * Register web-specific scopes ("request", "session", "globalSession")
 	 * with the given BeanFactory, as used by the WebApplicationContext.
+	 * 根据WebApplicationContext的使用，
+	 * 使用给定的BeanFactory注册特定于Web的范围（"request", "session", "globalSession"）。
 	 * @param beanFactory the BeanFactory to configure
 	 */
 	public static void registerWebApplicationScopes(ConfigurableListableBeanFactory beanFactory) {
@@ -177,21 +179,26 @@ public abstract class WebApplicationContextUtils {
 	/**
 	 * Register web-specific scopes ("request", "session", "globalSession", "application")
 	 * with the given BeanFactory, as used by the WebApplicationContext.
+	 * 使用WebApplicationContext使用的
+	 * 给定BeanFactory注册特定于Web的作用域（“request”，“session”，“globalSession”，“application”）。
 	 * @param beanFactory the BeanFactory to configure
 	 * @param sc the ServletContext that we're running within
 	 */
 	public static void registerWebApplicationScopes(ConfigurableListableBeanFactory beanFactory,
 			@Nullable ServletContext sc) {
 
+		// 注册作用域类型
 		beanFactory.registerScope(WebApplicationContext.SCOPE_REQUEST, new RequestScope());
 		beanFactory.registerScope(WebApplicationContext.SCOPE_SESSION, new SessionScope());
 		if (sc != null) {
 			ServletContextScope appScope = new ServletContextScope(sc);
+			// application作用域
 			beanFactory.registerScope(WebApplicationContext.SCOPE_APPLICATION, appScope);
 			// Register as ServletContext attribute, for ContextCleanupListener to detect it.
 			sc.setAttribute(ServletContextScope.class.getName(), appScope);
 		}
 
+		// 自动注入的支持
 		beanFactory.registerResolvableDependency(ServletRequest.class, new RequestObjectFactory());
 		beanFactory.registerResolvableDependency(ServletResponse.class, new ResponseObjectFactory());
 		beanFactory.registerResolvableDependency(HttpSession.class, new SessionObjectFactory());
@@ -280,8 +287,13 @@ public abstract class WebApplicationContextUtils {
 	 * <p>This method is idempotent with respect to the fact it may be called any number
 	 * of times but will perform replacement of stub property sources with their
 	 * corresponding actual property sources once and only once.
+	 *
+	 * 将基于Servlet的存根属性源替换为使用给定 ServletContext 和 ServletConfig 对象填充的实际实例。
+	 * 关于此方法可以调用任意次的事实，它是幂等的，但是将用其相应的实际属性源执行一次且仅一次的存根属性源替换。
+	 *
 	 * @param sources the {@link MutablePropertySources} to initialize (must not
 	 * be {@code null})
+	 * {@link MutablePropertySources}进行初始化（不得为{@code null}）
 	 * @param servletContext the current {@link ServletContext} (ignored if {@code null}
 	 * or if the {@link StandardServletEnvironment#SERVLET_CONTEXT_PROPERTY_SOURCE_NAME
 	 * servlet context property source} has already been initialized)
@@ -295,10 +307,13 @@ public abstract class WebApplicationContextUtils {
 			@Nullable ServletContext servletContext, @Nullable ServletConfig servletConfig) {
 
 		Assert.notNull(sources, "'propertySources' must not be null");
+		// 把 Servlet 的一些初始化参数放入IOC容器中（类似于 web.xml 中的参数放入IOC容器）
+		// servletContextInitParams
 		String name = StandardServletEnvironment.SERVLET_CONTEXT_PROPERTY_SOURCE_NAME;
 		if (servletContext != null && sources.contains(name) && sources.get(name) instanceof StubPropertySource) {
 			sources.replace(name, new ServletContextPropertySource(name, servletContext));
 		}
+		// servletConfigInitParams
 		name = StandardServletEnvironment.SERVLET_CONFIG_PROPERTY_SOURCE_NAME;
 		if (servletConfig != null && sources.contains(name) && sources.get(name) instanceof StubPropertySource) {
 			sources.replace(name, new ServletConfigPropertySource(name, servletConfig));

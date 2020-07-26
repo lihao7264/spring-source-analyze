@@ -140,31 +140,40 @@ public class DefaultResourceLoader implements ResourceLoader {
 	}
 
 
+	// 获取资源
 	@Override
 	public Resource getResource(String location) {
 		Assert.notNull(location, "Location must not be null");
 
+		// 协议解析器
 		for (ProtocolResolver protocolResolver : getProtocolResolvers()) {
+			// 如果此实现的协议匹配，则根据给定的资源加载器解析给定的位置。
 			Resource resource = protocolResolver.resolve(location, this);
 			if (resource != null) {
 				return resource;
 			}
 		}
-
+		// 处理前缀
 		if (location.startsWith("/")) {
+			// 根据路径解析资源
 			return getResourceByPath(location);
 		}
 		else if (location.startsWith(CLASSPATH_URL_PREFIX)) {
+			// 类路径的前缀的时候，则使用类路径资源类加载器
 			return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader());
 		}
 		else {
 			try {
 				// Try to parse the location as a URL...
+				// 尝试将位置解析为URL
 				URL url = new URL(location);
+				// 文件资源的话，则使用FileUrlResource加载
+				// url资源的话，则使用UrlResource加载
 				return (ResourceUtils.isFileURL(url) ? new FileUrlResource(url) : new UrlResource(url));
 			}
 			catch (MalformedURLException ex) {
 				// No URL -> resolve as resource path.
+				// 没有URL->解析为资源路径。
 				return getResourceByPath(location);
 			}
 		}
@@ -175,8 +184,13 @@ public class DefaultResourceLoader implements ResourceLoader {
 	 * <p>The default implementation supports class path locations. This should
 	 * be appropriate for standalone implementations but can be overridden,
 	 * e.g. for implementations targeted at a Servlet container.
-	 * @param path the path to the resource
-	 * @return the corresponding Resource handle
+	 *
+	 * 返回给定路径中资源的资源句柄。
+	 * 默认实现支持类路径位置。
+	 * 这对于独立的实现应该是适当的，但是可以被覆盖，例如针对Servlet容器的实现。
+	 *
+	 * @param path the path to the resource  资源路径
+	 * @return the corresponding Resource handle  相应的资源句柄
 	 * @see ClassPathResource
 	 * @see org.springframework.context.support.FileSystemXmlApplicationContext#getResourceByPath
 	 * @see org.springframework.web.context.support.XmlWebApplicationContext#getResourceByPath

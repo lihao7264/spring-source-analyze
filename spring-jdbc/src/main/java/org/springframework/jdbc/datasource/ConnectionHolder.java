@@ -34,6 +34,16 @@ import org.springframework.util.Assert;
  *
  * <p>Note: This is an SPI class, not intended to be used by applications.
  *
+ * 资源持有人包装了JDBC {@link Connection}。
+ * {@link DataSourceTransactionManager}将此类的实例绑定到线程，以用于特定的{@link javax.sql.DataSource}。
+ * 从基类继承对嵌套JDBC事务和引用计数功能的仅回滚支持。
+ * 注意：这是SPI类，不适合应用程序使用。
+ *
+ * 包装JDBC连接的资源持有者。
+ * 对于特定的 javax.sql.DataSource，DataSourceTransactionManager 将此类的实例绑定到线程。
+ * 从父类继承对嵌套JDBC事务和引用计数功能的仅回滚支持。
+ * 注意：这是SPI类，不适合应用程序使用。
+ * 总结：它是持有jdbc的 Connection 对象的，DataSource 、DataSourceTransactionManager可以借助它实现线程绑定。
  * @author Juergen Hoeller
  * @since 06.05.2003
  * @see DataSourceTransactionManager

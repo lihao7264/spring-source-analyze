@@ -23,6 +23,8 @@ import org.springframework.transaction.TransactionDefinition;
  * with the {@link Transactional} annotation, corresponding to the
  * {@link TransactionDefinition} interface.
  *
+ * spring事务的传播机制
+ *
  * @author Colin Sampaleanu
  * @author Juergen Hoeller
  * @since 1.2
@@ -33,6 +35,8 @@ public enum Propagation {
 	 * Support a current transaction, create a new one if none exists.
 	 * Analogous to EJB transaction attribute of the same name.
 	 * <p>This is the default setting of a transaction annotation.
+	 *
+	 * 支持当前事务，如果不存在则创建新事务。
 	 */
 	REQUIRED(TransactionDefinition.PROPAGATION_REQUIRED),
 

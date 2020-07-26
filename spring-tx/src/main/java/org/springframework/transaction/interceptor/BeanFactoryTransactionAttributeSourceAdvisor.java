@@ -25,6 +25,10 @@ import org.springframework.lang.Nullable;
  * Advisor driven by a {@link TransactionAttributeSource}, used to include
  * a transaction advice bean for methods that are transactional.
  *
+ * 由 TransactionAttributeSource 驱动的增强器，用于为开启事务的Bean的方法附加事务通知。（给业务方法增强事务通知）
+ * Advisor是一个增强器。
+ *
+ * Advisor → → →依赖→ → → Pointcut → → →依赖→ → → Source
  * @author Juergen Hoeller
  * @since 2.5.5
  * @see #setAdviceBeanName
@@ -37,6 +41,8 @@ public class BeanFactoryTransactionAttributeSourceAdvisor extends AbstractBeanFa
 	@Nullable
 	private TransactionAttributeSource transactionAttributeSource;
 
+	// 它是利用切入点来增强方法 （源码中看到了pointcut）。
+	// pointcut属性的创建又要借助 TransactionAttributeSource 。
 	private final TransactionAttributeSourcePointcut pointcut = new TransactionAttributeSourcePointcut() {
 		@Override
 		@Nullable

@@ -41,6 +41,8 @@ import org.springframework.util.MultiValueMap;
 /**
  * Internal class used to evaluate {@link Conditional} annotations.
  *
+ * 用于评估{@link Conditional}注解的内部类。
+ *
  * @author Phillip Webb
  * @author Juergen Hoeller
  * @since 4.0
@@ -64,6 +66,9 @@ class ConditionEvaluator {
 	 * Determine if an item should be skipped based on {@code @Conditional} annotations.
 	 * The {@link ConfigurationPhase} will be deduced from the type of item (i.e. a
 	 * {@code @Configuration} class will be {@link ConfigurationPhase#PARSE_CONFIGURATION})
+	 *
+	 * 根据{@code @Conditional}注解确定是否应跳过一项。
+	 * {@link ConfigurationPhase}将根据项目的类型推导（即{@code @Configuration}类将是{@link ConfigurationPhase＃PARSE_CONFIGURATION}）
 	 * @param metadata the meta data
 	 * @return if the item should be skipped
 	 */
@@ -73,15 +78,16 @@ class ConditionEvaluator {
 
 	/**
 	 * Determine if an item should be skipped based on {@code @Conditional} annotations.
+	 * 根据{@code @Conditional}注解确定是否应跳过一项。
 	 * @param metadata the meta data
 	 * @param phase the phase of the call
 	 * @return if the item should be skipped
 	 */
 	public boolean shouldSkip(@Nullable AnnotatedTypeMetadata metadata, @Nullable ConfigurationPhase phase) {
+		// 是否包含@Conditional注解或者子注解
 		if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) {
 			return false;
 		}
-
 		if (phase == null) {
 			if (metadata instanceof AnnotationMetadata &&
 					ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) {
@@ -90,6 +96,7 @@ class ConditionEvaluator {
 			return shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);
 		}
 
+		// 获取所有条件
 		List<Condition> conditions = new ArrayList<>();
 		for (String[] conditionClasses : getConditionClasses(metadata)) {
 			for (String conditionClass : conditionClasses) {
@@ -98,8 +105,10 @@ class ConditionEvaluator {
 			}
 		}
 
+		// 排序条件（按照order进行）
 		AnnotationAwareOrderComparator.sort(conditions);
 
+		// 判断是否条件都满足
 		for (Condition condition : conditions) {
 			ConfigurationPhase requiredPhase = null;
 			if (condition instanceof ConfigurationCondition) {

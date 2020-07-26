@@ -31,6 +31,9 @@ import org.springframework.core.type.AnnotationMetadata;
  * as appropriate based on an {@code @Enable*} annotation having {@code mode} and
  * {@code proxyTargetClass} attributes set to the correct values.
  *
+ * 实现了ImportBeanDefinitionRegistrar
+ * 手动向IOC容器中导入组件。
+ *
  * @author Chris Beams
  * @since 3.1
  * @see org.springframework.cache.annotation.EnableCaching
@@ -54,6 +57,8 @@ public class AutoProxyRegistrar implements ImportBeanDefinitionRegistrar {
 	 * annotation it finds -- as long as it exposes the right {@code mode} and
 	 * {@code proxyTargetClass} attributes, the APC can be registered and configured all
 	 * the same.
+	 * AutoProxyRegistrar类registerBeanDefinitions方法
+	 * 手动向IOC容器中导入组件。
 	 */
 	@Override
 	public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
@@ -69,6 +74,10 @@ public class AutoProxyRegistrar implements ImportBeanDefinitionRegistrar {
 			if (mode != null && proxyTargetClass != null && AdviceMode.class == mode.getClass() &&
 					Boolean.class == proxyTargetClass.getClass()) {
 				candidateFound = true;
+				// PROXY模式下会额外注册Bean
+				// 如果 @EnableTransactionManagement 注解中设置 adviceMode 为 PROXY （默认PROXY），
+				// 则会利用 AopConfigUtils 创建组件，并且如果 @EnableTransactionManagement 设置 proxyTargetClass 为true，
+				// 则还会额外导入组件（默认为false）。
 				if (mode == AdviceMode.PROXY) {
 					//关键代码
 					AopConfigUtils.registerAutoProxyCreatorIfNecessary(registry);

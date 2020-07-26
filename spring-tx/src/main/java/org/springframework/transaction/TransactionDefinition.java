@@ -137,6 +137,8 @@ public interface TransactionDefinition {
 	/**
 	 * Use the default isolation level of the underlying datastore.
 	 * All other levels correspond to the JDBC isolation levels.
+	 * 使用基础数据存储的默认隔离级别。
+	 * 所有其他级别对应于JDBC隔离级别。
 	 * @see java.sql.Connection
 	 */
 	int ISOLATION_DEFAULT = -1;

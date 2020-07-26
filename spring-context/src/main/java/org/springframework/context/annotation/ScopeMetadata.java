@@ -26,6 +26,9 @@ import org.springframework.util.Assert;
  * <p>The default scope is "singleton", and the default is to <i>not</i> create
  * scoped-proxies.
  *
+ * 描述Spring管理bean的范围特征，包括范围名称和scoped-proxy行为。
+ *
+ * 默认范围是单例，默认是不创建范围代理。
  * @author Mark Fisher
  * @author Juergen Hoeller
  * @since 2.5
@@ -34,6 +37,7 @@ import org.springframework.util.Assert;
  */
 public class ScopeMetadata {
 
+	// 作用域默认是singleton(单例)
 	private String scopeName = BeanDefinition.SCOPE_SINGLETON;
 
 	private ScopedProxyMode scopedProxyMode = ScopedProxyMode.NO;
@@ -64,6 +68,7 @@ public class ScopeMetadata {
 
 	/**
 	 * Get the proxy-mode to be applied to the scoped instance.
+	 * 获取要应用于作用域实例的代理模式。
 	 */
 	public ScopedProxyMode getScopedProxyMode() {
 		return this.scopedProxyMode;

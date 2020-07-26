@@ -58,6 +58,7 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	// Handling of current transaction state
 	//---------------------------------------------------------------------
 
+	// 更新确定仅回滚标志
 	@Override
 	public void setRollbackOnly() {
 		this.rollbackOnly = true;
@@ -79,6 +80,8 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	 * Determine the rollback-only flag via checking this TransactionStatus.
 	 * <p>Will only return "true" if the application called {@code setRollbackOnly}
 	 * on this TransactionStatus object.
+	 * 通过检查此TransactionStatus确定仅回滚标志。
+	 * 如果在此TransactionStatus对象上调用{@code setRollbackOnly}的应用程序，则只会返回“true”。
 	 */
 	public boolean isLocalRollbackOnly() {
 		return this.rollbackOnly;
@@ -140,6 +143,7 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 
 	/**
 	 * Create a savepoint and hold it for the transaction.
+	 * 创建一个保存点并将其保存在事务中。
 	 * @throws org.springframework.transaction.NestedTransactionNotSupportedException
 	 * if the underlying transaction does not support savepoints
 	 */
@@ -164,6 +168,7 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 
 	/**
 	 * Release the savepoint that is held for the transaction.
+	 * 释放为该事务保留的保存点。
 	 */
 	public void releaseHeldSavepoint() throws TransactionException {
 		Object savepoint = getSavepoint();

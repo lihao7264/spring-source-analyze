@@ -25,6 +25,9 @@ package org.springframework.beans.factory;
  * init method, for example in an XML bean definition. For a list of all bean
  * lifecycle methods, see the {@link BeanFactory BeanFactory javadocs}.
  *
+ * 由 BeanFactory 设置完所有属性后需要作出反应的bean所实现的接口：执行自定义初始化，或仅检查是否已设置所有必填属性。
+ * 实现InitializingBean的替代方法是指定自定义 init-method，例如在XML bean定义中。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see DisposableBean

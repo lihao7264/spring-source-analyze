@@ -73,7 +73,9 @@ class ComponentScanAnnotationParser {
 	}
 
 
+	// ComponentScanAnnotationParser类的parse方法
 	public Set<BeanDefinitionHolder> parse(AnnotationAttributes componentScan, final String declaringClass) {
+		// 获取ClassPathBeanDefinitionScanner
 		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(this.registry,
 				componentScan.getBoolean("useDefaultFilters"), this.environment, this.resourceLoader);
 
@@ -129,6 +131,9 @@ class ComponentScanAnnotationParser {
 				return declaringClass.equals(className);
 			}
 		});
+		// doScan 方法！
+		// 原来包扫描的触发时机在这里：执行 ConfigurationClassPostProcessor 的 postProcessBeanDefinitionRegistry 方法，
+		// 解析 @ComponentScan 时触发。
 		return scanner.doScan(StringUtils.toStringArray(basePackages));
 	}
 

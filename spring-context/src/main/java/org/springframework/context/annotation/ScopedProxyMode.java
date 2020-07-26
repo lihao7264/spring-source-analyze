@@ -23,6 +23,7 @@ package org.springframework.context.annotation;
  * section of the Spring reference documentation entitled '<em>Scoped beans as
  * dependencies</em>'.
  *
+ * 枚举各种作用域代理选项。
  * @author Mark Fisher
  * @since 2.5
  * @see ScopeMetadata
@@ -41,17 +42,24 @@ public enum ScopedProxyMode {
 	 * non-singleton scoped instance, which should favor the use of the
 	 * {@link #INTERFACES} or {@link #TARGET_CLASS} proxy-modes instead if it
 	 * is to be used as a dependency.
+	 *
+	 * 不要创建作用域代理。
+	 * 与非单作用域实例一起使用时，此代理模式通常不是有用的，
+	 * 它应支持使用{@link #INTERFACES}或{@link #TARGET_CLASS}代理模式，
+	 * 而不是用作依赖项。
 	 */
 	NO,
 
 	/**
 	 * Create a JDK dynamic proxy implementing <i>all</i> interfaces exposed by
 	 * the class of the target object.
+	 * 创建一个实现目标对象类公开的所有接口的JDK动态代理。
 	 */
 	INTERFACES,
 
 	/**
 	 * Create a class-based proxy (uses CGLIB).
+	 * 创建一个基于类的代理（使用CGLIB）。
 	 */
 	TARGET_CLASS
 

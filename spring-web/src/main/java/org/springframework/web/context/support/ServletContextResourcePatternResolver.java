@@ -73,6 +73,10 @@ public class ServletContextResourcePatternResolver extends PathMatchingResourceP
 	 * and uses {@code ServletContext.getResourcePaths} to find
 	 * matching resources below the web application root directory.
 	 * In case of other resources, delegates to the superclass version.
+	 * 覆盖的版本，它检查ServletContextResource并使用
+	 * {@code ServletContext.getResourcePaths}在Web应用程序根目录下查找匹配的资源。
+	 * 如果有其他资源，则委托给超类版本。
+	 * ServletContextResourcePatternResolver类
 	 * @see #doRetrieveMatchingServletContextResources
 	 * @see ServletContextResource
 	 * @see javax.servlet.ServletContext#getResourcePaths
@@ -81,6 +85,8 @@ public class ServletContextResourcePatternResolver extends PathMatchingResourceP
 	protected Set<Resource> doFindPathMatchingFileResources(Resource rootDirResource, String subPattern)
 			throws IOException {
 
+		// 在默认的项目内部包扫描中，与 ServletContextResource 没有关系，故还是要回到 PathMatchingResourcePatternResolver 中。
+		// 所以还会回到PathMatchingResourcePatternResolver的doRetrieveMatchingServletContextResources方法中
 		if (rootDirResource instanceof ServletContextResource) {
 			ServletContextResource scResource = (ServletContextResource) rootDirResource;
 			ServletContext sc = scResource.getServletContext();
@@ -97,9 +103,11 @@ public class ServletContextResourcePatternResolver extends PathMatchingResourceP
 	/**
 	 * Recursively retrieve ServletContextResources that match the given pattern,
 	 * adding them to the given result set.
-	 * @param servletContext the ServletContext to work on
+	 * 递归检索与给定模式匹配的ServletContextResources，并将它们添加到给定的结果集中。
+	 * @param servletContext the ServletContext to work on  要处理的ServletContext
 	 * @param fullPattern the pattern to match against,
 	 * with preprended root directory path
+	 * 要匹配的模式，带有预先设置的根目录路径
 	 * @param dir the current directory
 	 * @param result the Set of matching Resources to add to
 	 * @throws IOException if directory contents could not be retrieved

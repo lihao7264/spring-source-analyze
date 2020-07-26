@@ -34,6 +34,9 @@ import org.springframework.util.ObjectUtils;
  * interface. This catches beans that can't reliably be detected by {@code getBeanNamesForType}
  * and related operations which only work against top-level beans.
  *
+ * BeanPostProcessor，用于检测实现 ApplicationListener 接口的bean。
+ * 这将捕获 getBeanNamesForType 和仅对顶级bean有效的相关操作无法可靠检测到的bean。
+ *
  * <p>With standard Java serialization, this post-processor won't get serialized as part of
  * {@code DisposableBeanAdapter} to begin with. However, with alternative serialization
  * mechanisms, {@code DisposableBeanAdapter.writeReplace} might not get used at all, so we
@@ -66,13 +69,17 @@ class ApplicationListenerDetector implements DestructionAwareBeanPostProcessor, 
 		return bean;
 	}
 
+	// 如果Bean是 ApplicationListener 的实现类，并且是单实例Bean，则会注册到IOC容器中。
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) {
+		// 如果bean是 ApplicationListener的子类
 		if (bean instanceof ApplicationListener) {
 			// potentially not detected as a listener by getBeanNamesForType retrieval
+			// 如果是单例bean的话，则会出注册到IOC容器中
 			Boolean flag = this.singletonNames.get(beanName);
 			if (Boolean.TRUE.equals(flag)) {
 				// singleton bean (top-level or inner): register on the fly
+				// 添加
 				this.applicationContext.addApplicationListener((ApplicationListener<?>) bean);
 			}
 			else if (Boolean.FALSE.equals(flag)) {
@@ -83,6 +90,7 @@ class ApplicationListenerDetector implements DestructionAwareBeanPostProcessor, 
 							"because it does not have singleton scope. Only top-level listener beans are allowed " +
 							"to be of non-singleton scope.");
 				}
+				// 移除
 				this.singletonNames.remove(beanName);
 			}
 		}

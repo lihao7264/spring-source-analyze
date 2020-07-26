@@ -26,6 +26,9 @@ import org.springframework.lang.Nullable;
  * <p>Implementations know how to source transaction attributes, whether from configuration,
  * metadata attributes at source level (such as Java 5 annotations), or anywhere else.
  *
+ * {@link TransactionInterceptor}用于元数据检索的策略接口。
+ * 实施知道如何从配置，源级别的元数据属性（例如Java 5注释）或其他任何地方获取事务属性。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 15.04.2003

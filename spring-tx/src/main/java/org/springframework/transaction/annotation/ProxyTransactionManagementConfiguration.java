@@ -28,7 +28,10 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 /**
  * {@code @Configuration} class that registers the Spring infrastructure beans
  * necessary to enable proxy-based annotation-driven transaction management.
+ * {@code @Configuration}类，
+ * 用于注册启用基于代理的注解驱动的事务管理所需的Spring基础结构Bean。
  *
+ * 这个配置类还继承了父类，父类的配置也会被加载。
  * @author Chris Beams
  * @since 3.1
  * @see EnableTransactionManagement
@@ -38,8 +41,13 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class ProxyTransactionManagementConfiguration extends AbstractTransactionManagementConfiguration {
 
+	// 向IOC容器中注册了3个Bean
+
+	// internalTransactionAdvisor
 	@Bean(name = TransactionManagementConfigUtils.TRANSACTION_ADVISOR_BEAN_NAME)
+	// 完全内部使用
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+	// 事务增强器
 	public BeanFactoryTransactionAttributeSourceAdvisor transactionAdvisor() {
 		// 事务增强器
 		BeanFactoryTransactionAttributeSourceAdvisor advisor = new BeanFactoryTransactionAttributeSourceAdvisor();

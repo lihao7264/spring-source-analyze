@@ -170,6 +170,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 
 	/**
 	 * Add an exclude type filter to the <i>front</i> of the exclusion list.
+	 * 将排除类型过滤器添加到排除列表的。
 	 */
 	public void addExcludeFilter(TypeFilter excludeFilter) {
 		this.excludeFilters.add(0, excludeFilter);
@@ -275,6 +276,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 
 	private ResourcePatternResolver getResourcePatternResolver() {
 		if (this.resourcePatternResolver == null) {
+			//使用PathMatchingResourcePatternResolver
 			this.resourcePatternResolver = new PathMatchingResourcePatternResolver();
 		}
 		return this.resourcePatternResolver;
@@ -304,10 +306,13 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 
 	/**
 	 * Scan the class path for candidate components.
-	 * @param basePackage the package to check for annotated classes
-	 * @return a corresponding Set of autodetected bean definitions
+	 * 扫描类路径以查找候选组件。
+	 * ClassPathScanningCandidateComponentProvider类
+	 * @param basePackage the package to check for annotated classes  包以检查带注释的类
+	 * @return a corresponding Set of autodetected bean definitions  一组相应的自动检测到的Bean定义
 	 */
 	public Set<BeanDefinition> findCandidateComponents(String basePackage) {
+		// 包扫描进入的是下面的 scanCandidateComponents
 		if (this.componentsIndex != null && indexSupportsIncludeFilters()) {
 			return addCandidateComponentsFromIndex(this.componentsIndex, basePackage);
 		}
@@ -318,8 +323,11 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 
 	/**
 	 * Determine if the index can be used by this instance.
+	 * 确定该实例是否可以使用索引。
 	 * @return {@code true} if the index is available and the configuration of this
 	 * instance is supported by it, {@code false} otherwise
+	 * true：如果索引可用并且支持此实例的配置，
+	 * false：否则
 	 * @since 5.0
 	 */
 	private boolean indexSupportsIncludeFilters() {
@@ -333,8 +341,9 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 
 	/**
 	 * Determine if the specified include {@link TypeFilter} is supported by the index.
-	 * @param filter the filter to check
-	 * @return whether the index supports this include filter
+	 * 确定索引是否支持指定的包含{@link TypeFilter}。
+	 * @param filter the filter to check   要检查的过滤器
+	 * @return whether the index supports this include filter  索引是否支持包含过滤器
 	 * @since 5.0
 	 * @see #extractStereotype(TypeFilter)
 	 */
@@ -412,22 +421,32 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 		return candidates;
 	}
 
+	// ClassPathScanningCandidateComponentProvider类
 	private Set<BeanDefinition> scanCandidateComponents(String basePackage) {
 		Set<BeanDefinition> candidates = new LinkedHashSet<>();
 		try {
+			// 拼接包扫描路径（classpath下的basePackage路径下的class文件）
+			// com.atlihao.common ---> classpath*:com/atlihao/common/**/*.class
 			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
 					resolveBasePackage(basePackage) + '/' + this.resourcePattern;
+			// 4.2.3,4 包扫描
+			// getResources 方法最终会拿 ResourcePatternResolver 来获取一组 Resource
+			// 解析Component
 			Resource[] resources = getResourcePatternResolver().getResources(packageSearchPath);
 			boolean traceEnabled = logger.isTraceEnabled();
 			boolean debugEnabled = logger.isDebugEnabled();
+			// 遍历每个扫描出来的.class文件（此时还没有进行过滤），来下面的try部分。
 			for (Resource resource : resources) {
 				if (traceEnabled) {
 					logger.trace("Scanning " + resource);
 				}
 				if (resource.isReadable()) {
 					try {
+						// 使用了一个 MetadataReader 来解析.class文件，它就可以读取这个class的类定义信息、注解标注信息
 						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
+						// 用 MetadataReader 来判断这个class是否为一个 Component
 						if (isCandidateComponent(metadataReader)) {
+							// 判定为 Component 后，会将这个class封装为 BeanDefinition，最后返回。
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							sbd.setSource(resource);
 							if (isCandidateComponent(sbd)) {
@@ -436,6 +455,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 								}
 								candidates.add(sbd);
 							}
+							//  log和catch部分省略
 							else {
 								if (debugEnabled) {
 									logger.debug("Ignored because not a concrete top-level class: " + resource);
@@ -472,6 +492,11 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	 * the package search path.
 	 * <p>The default implementation resolves placeholders against system properties,
 	 * and converts a "."-based package path to a "/"-based resource path.
+	 * 将指定的基本包解析为包搜索路径的模式规范。
+	 * 默认实现根据系统属性解析占位符，并将基于"."的程序包路径转换为基于"/"的资源路径。
+	 * 把这个包名转换成文件路径
+	 * com.atlihao.common 会转为 com/atlihao/common
+	 * ClassPathScanningCandidateComponentProvider类
 	 * @param basePackage the base package as specified by the user
 	 * @return the pattern specification to be used for package searching
 	 */
@@ -482,15 +507,19 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	/**
 	 * Determine whether the given class does not match any exclude filter
 	 * and does match at least one include filter.
-	 * @param metadataReader the ASM ClassReader for the class
-	 * @return whether the class qualifies as a candidate component
+	 * 确定给定的类是否不匹配任何排除过滤器并且是否匹配至少一个包含过滤器。
+	 * @param metadataReader the ASM ClassReader for the class  该类的ASM ClassReader
+	 * @return whether the class qualifies as a candidate component  该类是否符合候选资格
 	 */
 	protected boolean isCandidateComponent(MetadataReader metadataReader) throws IOException {
+		// 遍历excludeFilters，如果匹配，则返回false
 		for (TypeFilter tf : this.excludeFilters) {
 			if (tf.match(metadataReader, getMetadataReaderFactory())) {
 				return false;
 			}
 		}
+		// 遍历includeFilters，如果匹配，则
+		// 判断class是否被 @Component / @ManagedBean 标注 (至此发现了真正扫描 @Component 的原理)
 		for (TypeFilter tf : this.includeFilters) {
 			if (tf.match(metadataReader, getMetadataReaderFactory())) {
 				return isConditionMatch(metadataReader);
@@ -502,6 +531,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	/**
 	 * Determine whether the given class is a candidate component based on any
 	 * {@code @Conditional} annotations.
+	 * 根据任何{@code @Conditional}注解确定给定的类是否为候选组件。
 	 * @param metadataReader the ASM ClassReader for the class
 	 * @return whether the class qualifies as a candidate component
 	 */

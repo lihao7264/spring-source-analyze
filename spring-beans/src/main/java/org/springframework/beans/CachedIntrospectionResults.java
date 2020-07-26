@@ -64,6 +64,9 @@ import org.springframework.util.StringUtils;
  * recreates much-requested entries every time the garbage collector removed them. In
  * such a scenario, consider the {@link #IGNORE_BEANINFO_PROPERTY_NAME} system property.
  *
+ * 缓存Java类的JavaBeans {@link java.beans.PropertyDescriptor}信息的内部类。
+ * 不适用于应用程序代码直接使用。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 05 May 2001
@@ -88,6 +91,14 @@ public final class CachedIntrospectionResults {
 	 * lifecycle in any case. For a web application, consider declaring a local
 	 * {@link org.springframework.web.util.IntrospectorCleanupListener} in {@code web.xml}
 	 * in case of a multi-ClassLoader layout, which will allow for effective caching as well.
+	 * 表示Spring在调用JavaBeans {@link Introspector}时使用{@link Introspector＃IGNORE_ALL_BEANINFO}模式的系统属性:"spring.beaninfo.ignore"，
+	 * 值为"true"，跳过对{@code BeanInfo}的搜索类（通常用于在应用程序中首先没有为bean定义此类的场景）。
+	 * 考虑所有{@code BeanInfo}元数据类，例如标准的{@link Introspector＃getBeanInfo（Class）}调用，默认值为"false"。
+	 * 如果遇到不存在的{@code BeanInfo}类的重复ClassLoader访问，请考虑将此标志设置为"true"，以防这种访问在启动或延迟加载时很昂贵。
+	 * 请注意，这种效果也可能表示缓存无法有效工作的情况：
+	 * 首选这样的安排：Spring jar与应用程序类位于同一ClassLoader中，这允许在任何应用程序的生命周期中进行干净的缓存案件。
+	 * 对于Web应用程序，请考虑在{@code web.xml}中声明本地{@link org.springframework.web.util.IntrospectorCleanupListener}
+	 * 在多ClassLoader布局的情况下，这也将允许有效的缓存。
 	 * @see Introspector#getBeanInfo(Class, int)
 	 */
 	public static final String IGNORE_BEANINFO_PROPERTY_NAME = "spring.beaninfo.ignore";
@@ -97,6 +108,7 @@ public final class CachedIntrospectionResults {
 			SpringProperties.getFlag(IGNORE_BEANINFO_PROPERTY_NAME);
 
 	/** Stores the BeanInfoFactory instances. */
+	/** 存储BeanInfoFactory实例。*/
 	private static final List<BeanInfoFactory> beanInfoFactories = SpringFactoriesLoader.loadFactories(
 			BeanInfoFactory.class, CachedIntrospectionResults.class.getClassLoader());
 
@@ -105,6 +117,7 @@ public final class CachedIntrospectionResults {
 	/**
 	 * Set of ClassLoaders that this CachedIntrospectionResults class will always
 	 * accept classes from, even if the classes do not qualify as cache-safe.
+	 * 该CachedIntrospectionResults类将始终接受其来源的ClassLoader的集合，即使这些类不符合缓存安全性。
 	 */
 	static final Set<ClassLoader> acceptedClassLoaders =
 			Collections.newSetFromMap(new ConcurrentHashMap<>(16));

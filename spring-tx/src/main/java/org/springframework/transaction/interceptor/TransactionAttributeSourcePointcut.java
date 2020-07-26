@@ -28,7 +28,10 @@ import org.springframework.util.ObjectUtils;
 /**
  * Inner class that implements a Pointcut that matches if the underlying
  * {@link TransactionAttributeSource} has an attribute for a given method.
+ * 内部类实现一个Pointcut，如果基础{@link TransactionAttributeSource}具有给定方法的属性，则该Pointcut匹配。
  *
+ * 所有的切入点类都会实现 Pointcut 接口，TransactionAttributeSourcePointcut 的类继承
+ * 实现了 ClassFilter 接口（matches 是重写的方法）
  * @author Juergen Hoeller
  * @since 2.5.5
  */
@@ -37,12 +40,15 @@ abstract class TransactionAttributeSourcePointcut extends StaticMethodMatcherPoi
 
 	@Override
 	public boolean matches(Method method, Class<?> targetClass) {
+		// 是否为 TransactionalProxy 、PlatformTransactionManager 、PersistenceExceptionTranslator 的实现类
 		if (TransactionalProxy.class.isAssignableFrom(targetClass) ||
 				PlatformTransactionManager.class.isAssignableFrom(targetClass) ||
 				PersistenceExceptionTranslator.class.isAssignableFrom(targetClass)) {
 			return false;
 		}
 		TransactionAttributeSource tas = getTransactionAttributeSource();
+		// 让 TransactionAttributeSource 获取事务属性看是否为空。
+		// 需要借助 TransactionAttributeSource 来判断，正好配置类中事务增强器的下边就要创建一个 AnnotationTransactionAttributeSource
 		return (tas == null || tas.getTransactionAttribute(method, targetClass) != null);
 	}
 

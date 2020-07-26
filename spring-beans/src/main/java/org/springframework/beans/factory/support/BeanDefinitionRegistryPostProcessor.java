@@ -26,6 +26,9 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
  * BeanDefinitionRegistryPostProcessor may register further bean definitions
  * which in turn define BeanFactoryPostProcessor instances.
  *
+ * BeanFactoryPostProcessor 还有一个子接口：BeanDefinitionRegistryPostProcessor（Bean定义注册的后置处理器）
+ * 执行时机是所有Bean的定义信息即将被加载但未实例化时，也就是先于 BeanFactoryPostProcessor。
+ * BeanPostProcessor 是对Bean的后置处理，BeanFactoryPostProcessor 是对 BeanFactory 的后置处理。
  * @author Juergen Hoeller
  * @since 3.0.1
  * @see org.springframework.context.annotation.ConfigurationClassPostProcessor
@@ -37,6 +40,9 @@ public interface BeanDefinitionRegistryPostProcessor extends BeanFactoryPostProc
 	 * standard initialization. All regular bean definitions will have been loaded,
 	 * but no beans will have been instantiated yet. This allows for adding further
 	 * bean definitions before the next post-processing phase kicks in.
+	 * 在标准初始化之后修改应用程序上下文的内部bean定义注册表。
+	 * 所有常规bean定义都已加载，但还没有实例化bean。
+	 * 这允许在下一个后期处理阶段开始之前添加进一步的bean定义。
 	 * @param registry the bean definition registry used by the application context
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 */

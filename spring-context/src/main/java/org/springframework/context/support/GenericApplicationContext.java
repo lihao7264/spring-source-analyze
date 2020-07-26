@@ -83,6 +83,10 @@ import org.springframework.util.Assert;
  * special bean definition formats in a refreshable manner, consider deriving
  * from the {@link AbstractRefreshableApplicationContext} base class.
  *
+ * 通用ApplicationContext实现，它拥有一个内部{@link org.springframework.beans.factory.support.DefaultListableBeanFactory}实例，
+ * 并且不采用特定的bean定义格式。
+ * 实现{@link org.springframework.beans.factory.support.BeanDefinitionRegistry}接口，以允许将任何bean定义读取器应用于该接口。
+ *
  * @author Juergen Hoeller
  * @author Chris Beams
  * @since 1.1.2
@@ -100,11 +104,13 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 
 	private boolean customClassLoader = false;
 
+	// 是否已刷新BeanFactory
 	private final AtomicBoolean refreshed = new AtomicBoolean();
 
 
 	/**
 	 * Create a new GenericApplicationContext.
+	 * 创建一个新的GenericApplicationContext。
 	 * @see #registerBeanDefinition
 	 * @see #refresh
 	 */
@@ -258,6 +264,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	/**
 	 * Do nothing: We hold a single internal BeanFactory and rely on callers
 	 * to register beans through our public methods (or the BeanFactory's).
+	 * 不执行任何操作：我们只拥有一个内部BeanFactory并依靠调用者通过我们的公共方法（或BeanFactory的方法）注册Bean。
 	 * @see #registerBeanDefinition
 	 */
 	@Override
@@ -266,6 +273,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 			throw new IllegalStateException(
 					"GenericApplicationContext does not support multiple refresh attempts: just call 'refresh' once");
 		}
+		// 设置了 BeanFactory 的序列化ID
 		this.beanFactory.setSerializationId(getId());
 	}
 
@@ -287,6 +295,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	/**
 	 * Return the single internal BeanFactory held by this context
 	 * (as ConfigurableListableBeanFactory).
+	 * 返回此上下文拥有的单个内部BeanFactory（作为ConfigurableListableBeanFactory）。
 	 */
 	@Override
 	public final ConfigurableListableBeanFactory getBeanFactory() {

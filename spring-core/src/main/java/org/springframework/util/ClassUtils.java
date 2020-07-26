@@ -67,9 +67,11 @@ public abstract class ClassUtils {
 	private static final String NON_PRIMITIVE_ARRAY_PREFIX = "[L";
 
 	/** The package separator character: {@code '.'}. */
+	// 包分隔符：{@ code'。'}。
 	private static final char PACKAGE_SEPARATOR = '.';
 
 	/** The path separator character: {@code '/'}. */
+	// 路径分隔符：{@ code'/'}。
 	private static final char PATH_SEPARATOR = '/';
 
 	/** The inner class separator character: {@code '$'}. */
@@ -585,8 +587,12 @@ public abstract class ClassUtils {
 
 	/**
 	 * Convert a "."-based fully qualified class name to a "/"-based resource path.
-	 * @param className the fully qualified class name
-	 * @return the corresponding resource path, pointing to the class
+	 *
+	 * 将基于"."的完全限定的类名称转换为基于"/"的资源路径。
+	 * 果然是包名转换，把 . 转换成 / 。
+	 *
+	 * @param className the fully qualified class name  完全符合的class 名称
+	 * @return the corresponding resource path, pointing to the class  指向类的相应资源路径
 	 */
 	public static String convertClassNameToResourcePath(String className) {
 		Assert.notNull(className, "Class name must not be null");

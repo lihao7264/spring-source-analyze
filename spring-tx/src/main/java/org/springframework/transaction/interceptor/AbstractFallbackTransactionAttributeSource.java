@@ -54,6 +54,7 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 	/**
 	 * Canonical value held in cache to indicate no transaction attribute was
 	 * found for this method, and we don't need to look again.
+	 * 保留在缓存中的规范值指示未找到此方法的事务属性，因此无需再次查看。
 	 */
 	@SuppressWarnings("serial")
 	private static final TransactionAttribute NULL_TRANSACTION_ATTRIBUTE = new DefaultTransactionAttribute() {
@@ -75,6 +76,8 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 	 * Cache of TransactionAttributes, keyed by method on a specific target class.
 	 * <p>As this base class is not marked Serializable, the cache will be recreated
 	 * after serialization - provided that the concrete subclass is Serializable.
+	 * TransactionAttributes的高速缓存，由特定目标类上的方法键控。
+	 * 由于此基类未标记为Serializable，因此在具体的子类为Serializable的情况下，将在序列化后重新创建缓存。
 	 */
 	private final Map<Object, TransactionAttribute> attributeCache = new ConcurrentHashMap<>(1024);
 
@@ -82,10 +85,14 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 	/**
 	 * Determine the transaction attribute for this method invocation.
 	 * <p>Defaults to the class's transaction attribute if no method attribute is found.
-	 * @param method the method for the current invocation (never {@code null})
-	 * @param targetClass the target class for this invocation (may be {@code null})
+	 * 确定此方法调用的事务属性。
+	 * 如果未找到方法属性，则默认为类的事务属性。
+	 *
+	 * @param method the method for the current invocation (never {@code null})  当前调用的方法（永不{@code null}）
+	 * @param targetClass the target class for this invocation (may be {@code null})  此调用的目标类（可以为{@code null}）
 	 * @return a TransactionAttribute for this method, or {@code null} if the method
 	 * is not transactional
+	 * 此方法的TransactionAttribute，如果该方法不是事务性的，则为{@code null}
 	 */
 	@Override
 	@Nullable
@@ -95,11 +102,14 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 		}
 
 		// First, see if we have a cached value.
+		// 首先，看看是否有一个缓存的值。
 		Object cacheKey = getCacheKey(method, targetClass);
+		// 这里取出来的 cached 不是null
 		TransactionAttribute cached = this.attributeCache.get(cacheKey);
 		if (cached != null) {
 			// Value will either be canonical value indicating there is no transaction attribute,
 			// or an actual transaction attribute.
+			// 值要么是表示没有事务属性的规范值，要么是实际事务属性。
 			if (cached == NULL_TRANSACTION_ATTRIBUTE) {
 				return null;
 			}
@@ -109,12 +119,16 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 		}
 		else {
 			// We need to work it out.
+			// 我们需要解决。
+			// 获取事务属性
 			TransactionAttribute txAttr = computeTransactionAttribute(method, targetClass);
 			// Put it in the cache.
+			// 将其放入缓存中。
 			if (txAttr == null) {
 				this.attributeCache.put(cacheKey, NULL_TRANSACTION_ATTRIBUTE);
 			}
 			else {
+				// 获取类上的
 				String methodIdentification = ClassUtils.getQualifiedMethodName(method, targetClass);
 				if (txAttr instanceof DefaultTransactionAttribute) {
 					((DefaultTransactionAttribute) txAttr).setDescriptor(methodIdentification);
@@ -144,6 +158,11 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 	 * Same signature as {@link #getTransactionAttribute}, but doesn't cache the result.
 	 * {@link #getTransactionAttribute} is effectively a caching decorator for this method.
 	 * <p>As of 4.1.8, this method can be overridden.
+	 *
+	 * 与{@link #getTransactionAttribute}相同的签名，但不缓存结果。
+	 * {@link #getTransactionAttribute}实际上是此方法的缓存装饰器。
+	 * 从4.1.8开始，可以重写此方法。
+	 *
 	 * @since 4.1.8
 	 * @see #getTransactionAttribute
 	 */

@@ -25,6 +25,8 @@ import org.springframework.lang.Nullable;
  * custom protocols to be handled without subclassing the loader
  * implementation (or application context implementation).
  *
+ * 特定于协议的资源句柄的解决策略。
+ *
  * @author Juergen Hoeller
  * @since 4.3
  * @see DefaultResourceLoader#addProtocolResolver
@@ -35,10 +37,12 @@ public interface ProtocolResolver {
 	/**
 	 * Resolve the given location against the given resource loader
 	 * if this implementation's protocol matches.
-	 * @param location the user-specified resource location
-	 * @param resourceLoader the associated resource loader
+	 * 如果此实现的协议匹配，则根据给定的资源加载器解析给定的位置。
+	 * @param location the user-specified resource location  用户指定的资源位置
+	 * @param resourceLoader the associated resource loader   相关的资源加载器
 	 * @return a corresponding {@code Resource} handle if the given location
 	 * matches this resolver's protocol, or {@code null} otherwise
+	 * 如果给定位置与此解析程序的协议匹配，则获取到相应的{@code Resource}句柄，否则为{@code null}
 	 */
 	@Nullable
 	Resource resolve(String location, ResourceLoader resourceLoader);

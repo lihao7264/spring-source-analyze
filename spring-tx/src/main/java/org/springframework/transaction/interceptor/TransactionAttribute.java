@@ -43,6 +43,7 @@ public interface TransactionAttribute extends TransactionDefinition {
 
 	/**
 	 * Should we roll back on the given exception?
+	 * 我们应该回退给定的异常吗？
 	 * @param ex the exception to evaluate
 	 * @return whether to perform a rollback or not
 	 */

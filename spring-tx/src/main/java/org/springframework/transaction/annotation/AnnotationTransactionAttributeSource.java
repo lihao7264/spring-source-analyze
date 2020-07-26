@@ -42,6 +42,14 @@ import org.springframework.util.ClassUtils;
  * This class may also serve as base class for a custom TransactionAttributeSource,
  * or get customized through {@link TransactionAnnotationParser} strategies.
  *
+ * org.springframework.transaction.interceptor.TransactionAttributeSource接口的实现，
+ * 用于处理JDK 1.5+注释格式的事务元数据。
+ * 此类读取Spring的 @Transactional 注解，
+ * 并将相应的事务属性公开给Spring的事务基础结构。
+ * 此外，还支持JTA 1.2的 javax.transaction.Transactional 和EJB3的 javax.ejb.TransactionAttribute 注解（如果存在）。
+ * 此类也可用作自定义 TransactionAttributeSource 的基类，或通过 TransactionAnnotationParser 策略进行自定义。
+ *
+ * 总结：AnnotationTransactionAttributeSource 是读取 @Transactional 注解的
  * @author Colin Sampaleanu
  * @author Juergen Hoeller
  * @since 1.2

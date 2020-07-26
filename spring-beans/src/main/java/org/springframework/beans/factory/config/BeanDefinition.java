@@ -32,6 +32,10 @@ import org.springframework.lang.Nullable;
  *
  * 用于描述一个具体bean实例
  *
+ * BeanDefinition 描述了一个bean实例，该实例具有属性值，构造函数参数值以及具体实现所提供的更多信息。
+ * 这只是一个最小的接口：主要目的是允许 BeanFactoryPostProcessor
+ * （例如 PropertyPlaceholderConfigurer ）内省和修改属性值和其他bean元数据。
+ *
  * @author Juergen Hoeller
  * @author Rob Harrop
  * @since 19.03.2004
@@ -133,6 +137,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 	/**
 	 * Override the target scope of this bean, specifying a new scope name.
+	 * 覆盖此bean的目标作用域，并指定一个新的作用域名称。
 	 * <bean scope="singleton/prototype">
 	 * @see #SCOPE_SINGLETON
 	 * @see #SCOPE_PROTOTYPE

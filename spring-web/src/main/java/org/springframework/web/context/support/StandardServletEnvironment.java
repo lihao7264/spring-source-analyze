@@ -45,9 +45,11 @@ import org.springframework.web.context.ConfigurableWebEnvironment;
 public class StandardServletEnvironment extends StandardEnvironment implements ConfigurableWebEnvironment {
 
 	/** Servlet context init parameters property source name: {@value}. */
+	// Servlet上下文初始化参数属性源名称：{@value}。
 	public static final String SERVLET_CONTEXT_PROPERTY_SOURCE_NAME = "servletContextInitParams";
 
 	/** Servlet config init parameters property source name: {@value}. */
+	// Servlet配置初始化参数属性源名称：{@value}。
 	public static final String SERVLET_CONFIG_PROPERTY_SOURCE_NAME = "servletConfigInitParams";
 
 	/** JNDI property source name: {@value}. */

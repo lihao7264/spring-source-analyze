@@ -48,56 +48,72 @@ import org.springframework.lang.Nullable;
 public abstract class ResourceUtils {
 
 	/** Pseudo URL prefix for loading from the class path: "classpath:". */
+	// 从类路径"classpath:"加载的伪URL前缀。
 	public static final String CLASSPATH_URL_PREFIX = "classpath:";
 
 	/** URL prefix for loading from the file system: "file:". */
+	// 从文件系统加载的URL前缀："file:"。
 	public static final String FILE_URL_PREFIX = "file:";
 
 	/** URL prefix for loading from a jar file: "jar:". */
+	// 从jar文件加载的URL前缀："jar:"。
 	public static final String JAR_URL_PREFIX = "jar:";
 
 	/** URL prefix for loading from a war file on Tomcat: "war:". */
+	// 从Tomcat上的war文件加载的URL前缀："war:"。
 	public static final String WAR_URL_PREFIX = "war:";
 
 	/** URL protocol for a file in the file system: "file". */
+	// 文件系统中文件的URL协议：“file”。
 	public static final String URL_PROTOCOL_FILE = "file";
 
 	/** URL protocol for an entry from a jar file: "jar". */
+	// jar文件中条目的URL协议："jar"。
 	public static final String URL_PROTOCOL_JAR = "jar";
 
 	/** URL protocol for an entry from a war file: "war". */
+	// 来自war文件的条目的URL协议：“ war”。
 	public static final String URL_PROTOCOL_WAR = "war";
 
 	/** URL protocol for an entry from a zip file: "zip". */
+	// 压缩文件中条目的URL协议：“ zip”。
 	public static final String URL_PROTOCOL_ZIP = "zip";
 
 	/** URL protocol for an entry from a WebSphere jar file: "wsjar". */
+	// WebSphere jar文件中条目的URL协议：“ wsjar”。
 	public static final String URL_PROTOCOL_WSJAR = "wsjar";
 
 	/** URL protocol for an entry from a JBoss jar file: "vfszip". */
+	// JBoss jar文件中条目的URL协议：“ vfszip”。
 	public static final String URL_PROTOCOL_VFSZIP = "vfszip";
 
 	/** URL protocol for a JBoss file system resource: "vfsfile". */
+	// JBoss文件系统资源的URL协议：“ vfsfile”。
 	public static final String URL_PROTOCOL_VFSFILE = "vfsfile";
 
 	/** URL protocol for a general JBoss VFS resource: "vfs". */
+	// 通用JBoss VFS资源的URL协议：“ vfs”。
 	public static final String URL_PROTOCOL_VFS = "vfs";
 
 	/** File extension for a regular jar file: ".jar". */
+	// 常规jar文件的文件扩展名：".jar"。
 	public static final String JAR_FILE_EXTENSION = ".jar";
 
 	/** Separator between JAR URL and file path within the JAR: "!/". */
+	// JAR URL和JAR中文件路径之间的分隔符：“!/”。
 	public static final String JAR_URL_SEPARATOR = "!/";
 
 	/** Special separator between WAR URL and jar part on Tomcat. */
+	// Tomcat上WAR URL和jar部分之间的特殊分隔符。
 	public static final String WAR_URL_SEPARATOR = "*/";
 
 
 	/**
 	 * Return whether the given resource location is a URL:
 	 * either a special "classpath" pseudo URL or a standard URL.
-	 * @param resourceLocation the location String to check
-	 * @return whether the location qualifies as a URL
+	 * 返回给定资源位置是否为URL：特殊的"类路径"URL或标准URL。
+	 * @param resourceLocation the location String to check  要检查的位置字符串
+	 * @return whether the location qualifies as a URL  该位置是否符合网址要求
 	 * @see #CLASSPATH_URL_PREFIX
 	 * @see java.net.URL
 	 */
@@ -105,10 +121,12 @@ public abstract class ResourceUtils {
 		if (resourceLocation == null) {
 			return false;
 		}
+		// 类路径前缀(classpath:)的话，则返回false
 		if (resourceLocation.startsWith(CLASSPATH_URL_PREFIX)) {
 			return true;
 		}
 		try {
+			// 尝试将位置解析为URL ...
 			new URL(resourceLocation);
 			return true;
 		}
@@ -264,11 +282,15 @@ public abstract class ResourceUtils {
 	/**
 	 * Determine whether the given URL points to a resource in the file system,
 	 * i.e. has protocol "file", "vfsfile" or "vfs".
-	 * @param url the URL to check
-	 * @return whether the URL has been identified as a file system URL
+	 * 确定给定的URL是否指向文件系统中的资源，即是否具有协议“ file”，“ vfsfile”或“ vfs”。
+	 *
+	 * @param url the URL to check  要检查的URL
+	 * @return whether the URL has been identified as a file system URL  该URL是否已被标识为文件系统URL
 	 */
 	public static boolean isFileURL(URL url) {
+		// url中的协议
 		String protocol = url.getProtocol();
+		// 协议等于“ file”或“ vfsfile”或“ vfs”
 		return (URL_PROTOCOL_FILE.equals(protocol) || URL_PROTOCOL_VFSFILE.equals(protocol) ||
 				URL_PROTOCOL_VFS.equals(protocol));
 	}

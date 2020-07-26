@@ -102,10 +102,12 @@ public abstract class JdbcTransactionObjectSupport implements SavepointManager, 
 
 	/**
 	 * This implementation creates a JDBC 3.0 Savepoint and returns it.
+	 * 此实现创建一个JDBC 3.0保存点并返回它。
 	 * @see java.sql.Connection#setSavepoint
 	 */
 	@Override
 	public Object createSavepoint() throws TransactionException {
+		// 拿 ConnectionHolder
 		ConnectionHolder conHolder = getConnectionHolderForSavepoint();
 		try {
 			if (!conHolder.supportsSavepoints()) {
@@ -116,6 +118,7 @@ public abstract class JdbcTransactionObjectSupport implements SavepointManager, 
 				throw new CannotCreateTransactionException(
 						"Cannot create savepoint for transaction which is already marked as rollback-only");
 			}
+			// 调了 createSavepoint 方法来实际的创建保存点。
 			return conHolder.createSavepoint();
 		}
 		catch (SQLException ex) {

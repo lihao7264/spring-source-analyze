@@ -200,13 +200,15 @@ public abstract class TransactionSynchronizationManager {
 
 	/**
 	 * Unbind a resource for the given key from the current thread.
-	 * @param key the key to unbind (usually the resource factory)
-	 * @return the previously bound value (usually the active resource object)
+	 * 从当前线程中取消给定键的资源。
+	 * @param key the key to unbind (usually the resource factory)  解除绑定的密钥（通常是资源工厂）
+	 * @return the previously bound value (usually the active resource object)  先前绑定的值（通常是活动资源对象）
 	 * @throws IllegalStateException if there is no value bound to the thread
 	 * @see ResourceTransactionManager#getResourceFactory()
 	 */
 	public static Object unbindResource(Object key) throws IllegalStateException {
 		Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);
+		// 核心方法
 		Object value = doUnbindResource(actualKey);
 		if (value == null) {
 			throw new IllegalStateException(
@@ -228,6 +230,7 @@ public abstract class TransactionSynchronizationManager {
 
 	/**
 	 * Actually remove the value of the resource that is bound for the given key.
+	 * 实际上删除为给定键绑定的资源的值。
 	 */
 	@Nullable
 	private static Object doUnbindResource(Object actualKey) {
@@ -235,6 +238,7 @@ public abstract class TransactionSynchronizationManager {
 		if (map == null) {
 			return null;
 		}
+		// 对 ThreadLocal 中的事务对象进行移除操作，完成事务解除绑定。
 		Object value = map.remove(actualKey);
 		// Remove entire ThreadLocal if empty...
 		if (map.isEmpty()) {

@@ -186,9 +186,11 @@ public class GenericWebApplicationContext extends GenericApplicationContext
 	/**
 	 * {@inheritDoc}
 	 * <p>Replace {@code Servlet}-related property sources.
+	 * 替换{@code Servlet}相关的属性源。
 	 */
 	@Override
 	protected void initPropertySources() {
+		// 获取环境
 		ConfigurableEnvironment env = getEnvironment();
 		if (env instanceof ConfigurableWebEnvironment) {
 			((ConfigurableWebEnvironment) env).initPropertySources(this.servletContext, null);

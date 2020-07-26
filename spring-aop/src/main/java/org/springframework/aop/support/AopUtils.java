@@ -97,9 +97,13 @@ public abstract class AopUtils {
 	/**
 	 * Determine the target class of the given bean instance which might be an AOP proxy.
 	 * <p>Returns the target class for an AOP proxy or the plain class otherwise.
-	 * @param candidate the instance to check (might be an AOP proxy)
+	 *
+	 * 确定给定bean实例的目标类，它可能是AOP代理。
+	 * 返回AOP代理的目标类，否则返回普通类。
+	 * @param candidate the instance to check (might be an AOP proxy)  要检查的实例（可能是AOP代理）
 	 * @return the target class (or the plain class of the given object as fallback;
 	 * never {@code null})
+	 * 目标类（或给定对象的普通类作为后备,永不{@code null}）
 	 * @see org.springframework.aop.TargetClassAware#getTargetClass()
 	 * @see org.springframework.aop.framework.AopProxyUtils#ultimateTargetClass(Object)
 	 */
